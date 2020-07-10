@@ -80,6 +80,13 @@ class Graph {
   linkChild(parentNode, childNode) {
     return this.linkNodes(parentNode, childNode);
   }
+
+  spawnStarterNode(data) {
+    const node = new Node(data || { name: 'root' });
+    node.addChildren(...this.getAllNodes());
+
+    return node;
+  }
 }
 
 export default Graph;

@@ -2,10 +2,11 @@ import React, { useCallback } from 'react';
 
 import './simple-content.css';
 
-const SimpleContent = ({ handleClick, name, idx }) => {
+const SimpleContent = ({ handleClick, name, idx, id }) => {
   const handleClickButton = useCallback(() => {
-    handleClick({ idx });
-  }, [handleClick, idx]);
+    handleClick(idx !== undefined ? idx : id);
+  }, [handleClick, idx, id]);
+  
   const parts = name.split('-');
 
   return (
