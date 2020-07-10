@@ -4,8 +4,8 @@ import './simple-content.css';
 
 const SimpleContent = ({ handleClick, name, idx }) => {
   const handleClickButton = useCallback(() => {
-    handleClick(name, idx);
-  }, [handleClick, name, idx]);
+    handleClick({ idx });
+  }, [handleClick, idx]);
   const parts = name.split('-');
 
   return (
