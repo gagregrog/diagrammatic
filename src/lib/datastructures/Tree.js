@@ -1,11 +1,6 @@
-class Tree {
-  constructor(data) {
-    this.Content = data.Content;
-    this.name = data.name || data.toString();
-    this.id = `${this.name}-${Math.random()}`;
-    this.children = [];
-  }
+import Node from './Node';
 
+class Tree extends Node {
   append(...data) {
     const nodes = data.map(data => new Tree(data));
 

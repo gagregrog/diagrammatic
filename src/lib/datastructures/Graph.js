@@ -1,11 +1,6 @@
-class Node {
-  constructor(data) {
-    this.Content = data.Content;
-    this.name = data.name || data.toString();
-    this.id = `${this.name}-${Math.random()}`;
-    this.children = [];
-  }
+import Node from './Node';
 
+class GraphNode extends Node {
   addChildren(...nodes) {
     this.children.push(...nodes);
     this.children = Array.from(new Set(this.children));
@@ -25,7 +20,7 @@ class Graph {
   }
 
   createNodes(...nodesData) {
-    const nodes = nodesData.map((data => new Node(data)));
+    const nodes = nodesData.map((data => new GraphNode(data)));
     nodes.forEach(node => {
       this.nodes[node.id] = node;
     });
@@ -53,7 +48,7 @@ class Graph {
 
   linkNodes(parentNode, ...children) {
     ([parentNode, ...children] = [parentNode, ...children]
-      .map(node => (node instanceof Node
+      .map(node => (node instanceof GraphNode
         ? node
         : this.nodes[node]
       ))
@@ -82,7 +77,7 @@ class Graph {
   }
 
   spawnStarterNode(data) {
-    const node = new Node(data || { name: 'Graph' });
+    const node = new GraphNode(data || { name: 'Graph' });
 
     node.addChildren(...this.getAllNodes());
 
