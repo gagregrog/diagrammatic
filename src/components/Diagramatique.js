@@ -67,11 +67,9 @@ function Diagramatique(props) {
     handleClickGraph(id);
   }, [handleClickGraph]);
 
-  console.log(current);
-
   return (current &&
-    <div>
-      <h1>{current.name}</h1>
+    <div className="diagramatique-root">
+      <h1 className="diagramatique-title">{current.name}</h1>
       <div className="diagramatique-back">
         {!!history.length && <button onClick={props.tree ? handleBackTree : handleBackGraph}>Back</button>}
       </div>

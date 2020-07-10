@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import Diagramatique from './components/Diagramatique';
 import { createTreeRecursively, directedGraph as graph } from './lib/util';
 
-
 const tree = createTreeRecursively(6);
+
+console.log(tree);
+console.log(graph);
 
 function App() {
   const [isTree, setIsTree] = useState(true);
