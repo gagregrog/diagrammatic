@@ -48,7 +48,7 @@ function Diagramatique(props) {
     const lastId = history[history.length - 2];
 
     setCurrent(lastId
-      ? props.graph.getNode(lastId, true)
+      ? props.graph.getNode(lastId)
       : props.graph.spawnStarterNode()
     );
 
@@ -58,7 +58,7 @@ function Diagramatique(props) {
 
   const handleClickGraph = useCallback((id) => {
     setHistory(hist => [...hist, id]);
-    setCurrent(props.graph.getNode(id, true));
+    setCurrent(props.graph.getNode(id));
   }, [props.graph]);
 
   const handleClickButtonGraph = useCallback((e) => {
@@ -66,6 +66,8 @@ function Diagramatique(props) {
 
     handleClickGraph(id);
   }, [handleClickGraph]);
+
+  console.log(current);
 
   return (current &&
     <div>
