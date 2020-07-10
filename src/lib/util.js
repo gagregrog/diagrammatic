@@ -2,6 +2,7 @@ import faker from 'faker';
 
 import Tree from './datastructures/Tree';
 import SimpleContent from '../components/SimpleContent';
+import Graph from './datastructures/Graph';
 
 const nums = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth'];
 const getSomeNums = () => nums.slice(0, Math.floor(Math.random() * (nums.length - 2)) + 2);
@@ -19,7 +20,10 @@ const createDescendants = (parentNode) => {
 }
 
 export const createTreeRecursively = (depth = 1) => {
-  const root = new Tree('root');
+  const root = new Tree({
+    name: 'root',
+    Content: SimpleContent,
+  });
 
   const addMore = (currDepth = 0) => (node) => {
     // base case
@@ -33,3 +37,26 @@ export const createTreeRecursively = (depth = 1) => {
 
   return root;
 };
+
+const directed = true;
+export const directedGraph = new Graph(directed);
+
+const nodes = directedGraph.createNodes(
+  { name: 'zeroth' },
+  { name: 'first' },
+  { name: 'second' },
+  { name: 'third' },
+  { name: 'fourth' },
+  { name: 'fifth' },
+  { name: 'sixth' },
+  { name: 'seventh' },
+  { name: 'eighth' },
+);
+
+directedGraph.linkNodes(nodes[0], nodes[6]);
+directedGraph.linkNodes(nodes[1], ...nodes.slice(2, 5));
+directedGraph.linkNodes(nodes[2], nodes[1], nodes[4]);
+directedGraph.linkNodes(nodes[4], nodes[0], nodes[3], nodes[7], nodes[8]);
+directedGraph.linkNodes(nodes[6], nodes[5]);
+directedGraph.linkNodes(nodes[7], nodes[8]);
+directedGraph.linkNodes(nodes[8], nodes[7]);
