@@ -13,6 +13,18 @@ class Tree {
 
     return this;
   }
+
+  getChildren(...nodeIds) {
+    return this.children.filter(child => nodeIds.includes(child.id));
+  }
+
+  getChild(nodeId) {
+    return this.getChildren(nodeId)[0];
+  }
+
+  getChildByIdx(idx) {
+    return this.children[idx];
+  }
 }
 
 export default Tree;
