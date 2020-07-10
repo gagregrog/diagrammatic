@@ -38,7 +38,7 @@ class Graph {
   }
 
   getAllNodes() {
-    return Object.entries(this.nodes);
+    return Object.values(this.nodes);
   }
 
   getNodes(...nodeIds) {
@@ -47,8 +47,17 @@ class Graph {
     return nodeIds.length > 1 ? nodes : nodes[0];
   }
 
-  getNode(nodeId) {
-    return this.getNodes(...nodeId);
+  getNode(nodeId, hydrate) {
+    const node = this.getNodes(nodeId);
+
+    return ((node && hydrate) ? this.hydrate(node) : node);
+  }
+
+  hydrate(node) {
+    return {
+      ...node,
+      children: node.children.map(child => this.getNode(child)),
+    };
   }
 
   linkNodes(parentNode, ...children) {
@@ -82,8 +91,9 @@ class Graph {
   }
 
   spawnStarterNode(data) {
-    const node = new Node(data || { name: 'root' });
-    node.addChildren(...this.getAllNodes());
+    const node = new Node(data || { name: 'Graph' });
+
+    node.children = this.getAllNodes();
 
     return node;
   }

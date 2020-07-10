@@ -1,10 +1,19 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 
 import './diagramatique.css';
 
 function Diagramatique(props) {
+  const dataRef = useRef(props.tree || props.data);
   const [history, setHistory] = useState([]);
   const [current, setCurrent] = useState(null);
+
+  useEffect(() => {
+    if ((props.tree || props.graph) !== dataRef.current) {
+      dataRef.current = (props.graph || props.tree);
+      setCurrent(null);
+      setHistory([]);
+    }
+  }, [props.graph, props.tree]);
 
   useEffect(() => {
     if (!current && props.tree) {
@@ -36,9 +45,12 @@ function Diagramatique(props) {
 
   // move up one level
   const handleBackGraph = useCallback(() => {
-    const lastId = history[history.length - 1];
+    const lastId = history[history.length - 2];
 
-    setCurrent(props.graph.getNode(lastId));
+    setCurrent(lastId
+      ? props.graph.getNode(lastId, true)
+      : props.graph.spawnStarterNode()
+    );
 
     // pop off the last item in the history
     setHistory(state => state.slice(0, -1));
@@ -46,7 +58,7 @@ function Diagramatique(props) {
 
   const handleClickGraph = useCallback((id) => {
     setHistory(hist => [...hist, id]);
-    setCurrent(curr => props.graph.getNode(id));
+    setCurrent(props.graph.getNode(id, true));
   }, [props.graph]);
 
   const handleClickButtonGraph = useCallback((e) => {
@@ -54,7 +66,6 @@ function Diagramatique(props) {
 
     handleClickGraph(id);
   }, [handleClickGraph]);
-
 
   return (current &&
     <div>
@@ -79,7 +90,7 @@ function Diagramatique(props) {
             return (Content
               ? <Content {...contentProps} />
               : (
-                <button key={id} name={idx} onClick={props.tree ? handleClickButtonTree : handleClickButtonGraph}>
+                <button key={id} name={props.tree ? idx : id} onClick={props.tree ? handleClickButtonTree : handleClickButtonGraph}>
                   {name}
                 </button>
               )

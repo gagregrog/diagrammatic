@@ -1,16 +1,23 @@
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Diagramatique from './components/Diagramatique';
-import { createTreeRecursively } from './lib/util';
+import { createTreeRecursively, directedGraph as graph } from './lib/util';
+
 
 const tree = createTreeRecursively(6);
-console.log(tree);
 
 function App() {
+  const [isTree, setIsTree] = useState(true);
+
+  const props = isTree ? { tree } : { graph };
+
+  const toggle = () => setIsTree(state => !state);
+
   return (
     <div className="App">
       <header className="App-header">
-        <Diagramatique tree={tree} />
+        <button onClick={toggle} className="toggle">Switch to {isTree ? 'Graph' : 'Tree'}</button>
+        <Diagramatique {...props} />
       </header>
     </div>
   );

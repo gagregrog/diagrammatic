@@ -21,7 +21,7 @@ const createDescendants = (parentNode) => {
 
 export const createTreeRecursively = (depth = 1) => {
   const root = new Tree({
-    name: 'root',
+    name: 'Tree',
     Content: SimpleContent,
   });
 
@@ -42,15 +42,15 @@ const directed = true;
 export const directedGraph = new Graph(directed);
 
 const nodes = directedGraph.createNodes(
-  { name: 'zeroth' },
-  { name: 'first' },
-  { name: 'second' },
-  { name: 'third' },
-  { name: 'fourth' },
-  { name: 'fifth' },
-  { name: 'sixth' },
-  { name: 'seventh' },
-  { name: 'eighth' },
+  { name: 'zeroth', Content: SimpleContent, },
+  { name: 'first', Content: SimpleContent, },
+  { name: 'second', Content: SimpleContent, },
+  { name: 'third', Content: SimpleContent, },
+  { name: 'fourth', Content: SimpleContent, },
+  { name: 'fifth', Content: SimpleContent, },
+  { name: 'sixth', Content: SimpleContent, },
+  { name: 'seventh', Content: SimpleContent, },
+  { name: 'eighth', Content: SimpleContent, },
 );
 
 directedGraph.linkNodes(nodes[0], nodes[6]);
