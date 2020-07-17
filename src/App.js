@@ -1,7 +1,10 @@
 import './App.css';
 import React, { useState } from 'react';
-import Diagramatique from './components/Diagramatique';
-import { createTreeRecursively, directedGraph as graph } from './lib/util';
+import Diagrammatic from './components/Diagrammatic';
+import {
+  createTreeRecursively,
+  directedGraph as graph,
+} from './lib/util';
 
 const tree = createTreeRecursively(6);
 
@@ -19,7 +22,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <button onClick={toggle} className="toggle">Switch to {isTree ? 'Graph' : 'Tree'}</button>
-        <Diagramatique {...props} />
+        <Diagrammatic {...props} />
       </header>
     </div>
   );

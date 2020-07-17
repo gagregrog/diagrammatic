@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 
-import './diagramatique.css';
+import './diagrammatic.css';
 
-function Diagramatique(props) {
+function Diagrammatic(props) {
   const dataRef = useRef(props.tree || props.data);
   const [history, setHistory] = useState([]);
   const [current, setCurrent] = useState(null);
@@ -68,12 +68,12 @@ function Diagramatique(props) {
   }, [handleClickGraph]);
 
   return (current &&
-    <div className="diagramatique-root">
-      <h1 className="diagramatique-title">{current.name}</h1>
-      <div className="diagramatique-back">
+    <div className="diagrammatic-root">
+      <h1 className="diagrammatic-title">{current.name}</h1>
+      <div className="diagrammatic-back">
         {!!history.length && <button onClick={props.tree ? handleBackTree : handleBackGraph}>Back</button>}
       </div>
-      <div className="diagramatique-display">
+      <div className="diagrammatic-display">
         {current.children && current.children
           .map(({ name, id, Content }, idx) => {
             const contentProps = {
@@ -102,4 +102,4 @@ function Diagramatique(props) {
   );
 }
 
-export default Diagramatique;
+export default Diagrammatic;
