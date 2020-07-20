@@ -1,8 +1,8 @@
-import Node from './Node';
+const Node = require('./Node');
 
 class Tree extends Node {
   append(...data) {
-    const nodes = data.map(data => new Tree(data));
+    const nodes = data.map((data) => new Tree(data));
 
     this.children.push(...nodes);
 
@@ -10,7 +10,7 @@ class Tree extends Node {
   }
 
   getChildren(...nodeIds) {
-    return this.children.filter(child => nodeIds.includes(child.id));
+    return this.children.filter((child) => nodeIds.includes(child.id));
   }
 
   getChild(nodeId) {
@@ -22,4 +22,4 @@ class Tree extends Node {
   }
 }
 
-export default Tree;
+module.exports = Tree;
