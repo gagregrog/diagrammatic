@@ -13,26 +13,26 @@ const parse = (csvData, parseOpts = {}) =>
 
 // split comma delimited strings into an array of options
 // count the number of unique options per column
-const splitOptions = (rows) => {
-  const counts = {};
+const splitOptions = (dirtyRows, leafKey) => {
+  const uniqueKeys = {};
 
-  const splitRows = rows.map((row) =>
+  const splitRows = dirtyRows.map((row) =>
     Object.entries(row).reduce((acc, [key, optionVal]) => {
-      if (!counts[key]) {
-        counts[key] = {};
+      if (!uniqueKeys[key]) {
+        uniqueKeys[key] = {};
       }
 
       const options = optionVal.split(',').map((part) => part.trim());
 
       options.forEach((option) => {
-        counts[key][option] = true;
+        uniqueKeys[key][option] = true;
       });
 
       return { ...acc, [key]: options.length > 1 ? options : options[0] };
     }, {}),
   );
 
-  const numberCounts = Object.entries(counts).reduce(
+  const counts = Object.entries(uniqueKeys).reduce(
     (acc, [key, options]) => ({
       ...acc,
       [key]: Object.keys(options).length,
@@ -40,7 +40,19 @@ const splitOptions = (rows) => {
     {},
   );
 
-  return { rows: splitRows, counts: numberCounts };
+  const rows = [];
+  splitRows.forEach((row) => {
+    if (Array.isArray(row[leafKey])) {
+      const leaves = row[leafKey];
+      leaves.forEach((leaf) => {
+        rows.push({ ...row, [leafKey]: leaf });
+      });
+    } else {
+      rows.push(row);
+    }
+  });
+
+  return { rows, counts };
 };
 
 // sort the node keys based on the number of options for that key
@@ -55,7 +67,7 @@ const sortByCounts = (array, counts) => {
 const processSpreadsheetFile = async (csvData, parseOpts) => {
   const results = await parse(csvData, parseOpts);
   const [leafKey, ...nodes] = results.meta.fields;
-  const { rows, counts } = splitOptions(results.data);
+  const { rows, counts } = splitOptions(results.data, leafKey);
   sortByCounts(nodes, counts);
 
   return {
