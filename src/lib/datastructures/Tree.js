@@ -9,6 +9,11 @@ class Tree extends Node {
     return this;
   }
 
+  sortChildrenByName(reverse) {
+    let mult = reverse ? -1 : 1;
+    this.children.sort((a, b) => a.name.localeCompare(b.name) * mult);
+  }
+
   getChildren(...nodeIds) {
     return this.children.filter((child) => nodeIds.includes(child.id));
   }

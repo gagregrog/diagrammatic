@@ -4,9 +4,9 @@ const processFile = require('../csv');
 class DecisionTree {
   async ingest(csvData, parseOpts) {
     const { leafKey, nodeKeys, rows } = await processFile(csvData, parseOpts);
+    this._rows = rows;
     this._leafKey = leafKey;
     this._nodeKeys = nodeKeys;
-    this._rows = rows;
 
     this.buildTreeRecursively();
   }
@@ -40,11 +40,13 @@ class DecisionTree {
         node.append(
           ...rows.map((row) => DecisionTree.formatNodeData(this._leafKey, row[this._leafKey])),
         );
+        node.sortChildrenByName();
 
         return;
       }
 
       node.append(...groupOptions);
+      node.sortChildrenByName();
       node.children.forEach((childNode) => {
         const optionName = childNode.data.option;
         const nextRows = rows.filter((row) => row[colName].includes(optionName));
