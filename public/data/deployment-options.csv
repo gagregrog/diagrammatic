@@ -4,4 +4,4 @@ BentoML,"Scikit, Tensorflow, PyTorch",yes,no,yes,yes,yes
 Flask,"Scikit, Tensorflow, PyTorch",yes,no,no,no,no
 ONNX Runtime,"Scikit, Tensorflow, PyTorch",yes,no,yes,no,yes
 TF JS (in browser),Tensorflow,yes,yes,no,no,no
-Ray Serve,"Scikit, Tensorflow, PyTorch",yes,no,yes,yes,yes
+"Ray Serve, Fake Thing","Scikit, Tensorflow, PyTorch",yes,no,yes,yes,yes
