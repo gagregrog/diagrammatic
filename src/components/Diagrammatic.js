@@ -9,7 +9,7 @@ function Diagrammatic(props) {
 
   useEffect(() => {
     if ((props.tree || props.graph) !== dataRef.current) {
-      dataRef.current = (props.graph || props.tree);
+      dataRef.current = props.graph || props.tree;
       setCurrent(null);
       setHistory([]);
     }
@@ -29,76 +29,91 @@ function Diagrammatic(props) {
     setCurrent(history.slice(0, -1).reduce((acc, idx) => acc.children[idx], props.tree));
 
     // pop off the last item in the history
-    setHistory(state => state.slice(0, -1));
+    setHistory((state) => state.slice(0, -1));
   }, [history, props.tree]);
 
   const handleClickTree = useCallback((idx) => {
-    setHistory(hist => [...hist, idx ]);
-    setCurrent(curr => curr.children[idx]);
+    setHistory((hist) => [...hist, idx]);
+    setCurrent((curr) => curr.children[idx]);
   }, []);
 
-  const handleClickButtonTree = useCallback((e) => {
-    const idx = +e.target.name;
+  const handleClickButtonTree = useCallback(
+    (e) => {
+      const idx = +e.target.name;
 
-    handleClickTree(idx);
-  }, [handleClickTree]);
+      handleClickTree(idx);
+    },
+    [handleClickTree],
+  );
 
   // move up one level
   const handleBackGraph = useCallback(() => {
     const lastId = history[history.length - 2];
 
-    setCurrent(lastId
-      ? props.graph.getNode(lastId)
-      : props.graph.spawnStarterNode()
-    );
+    setCurrent(lastId ? props.graph.getNode(lastId) : props.graph.spawnStarterNode());
 
     // pop off the last item in the history
-    setHistory(state => state.slice(0, -1));
+    setHistory((state) => state.slice(0, -1));
   }, [history, props.graph]);
 
-  const handleClickGraph = useCallback((id) => {
-    setHistory(hist => [...hist, id]);
-    setCurrent(props.graph.getNode(id));
-  }, [props.graph]);
+  const handleClickGraph = useCallback(
+    (id) => {
+      setHistory((hist) => [...hist, id]);
+      setCurrent(props.graph.getNode(id));
+    },
+    [props.graph],
+  );
 
-  const handleClickButtonGraph = useCallback((e) => {
-    const id = e.target.name;
+  const handleClickButtonGraph = useCallback(
+    (e) => {
+      const id = e.target.name;
 
-    handleClickGraph(id);
-  }, [handleClickGraph]);
+      handleClickGraph(id);
+    },
+    [handleClickGraph],
+  );
 
-  return (current &&
-    <div className="diagrammatic-root">
-      <h1 className="diagrammatic-title">{current.name}</h1>
-      <div className="diagrammatic-back">
-        {!!history.length && <button onClick={props.tree ? handleBackTree : handleBackGraph}>Back</button>}
-      </div>
-      <div className="diagrammatic-display">
-        {current.children && current.children
-          .map(({ name, id, Content }, idx) => {
-            const contentProps = {
-              id,
-              name,
-              key: id,
-              handleClick: props.tree ? handleClickTree : handleClickGraph,
-            };
+  return (
+    current && (
+      <div className="diagrammatic-root">
+        <h1 className="diagrammatic-title">{current.name}</h1>
+        <div className="diagrammatic-back">
+          {!!history.length && (
+            <button onClick={props.tree ? handleBackTree : handleBackGraph}>Back</button>
+          )}
+        </div>
+        <div className="diagrammatic-display">
+          {!!current.children?.[0]?.data?.column && (
+            <div className="diagrammatic-data">{current.children[0].data.column}?</div>
+          )}
+          {current.children &&
+            current.children.map(({ name, id, Content, data }, idx) => {
+              const contentProps = {
+                id,
+                name,
+                key: id,
+                handleClick: props.tree ? handleClickTree : handleClickGraph,
+              };
 
-            if (props.tree) {
-              contentProps.idx = idx;
-            }
+              if (props.tree) {
+                contentProps.idx = idx;
+              }
 
-            return (Content
-              ? <Content {...contentProps} />
-              : (
-                <button key={id} name={props.tree ? idx : id} onClick={props.tree ? handleClickButtonTree : handleClickButtonGraph}>
-                  {name}
+              return Content ? (
+                <Content {...contentProps} />
+              ) : (
+                <button
+                  key={id}
+                  name={props.tree ? idx : id}
+                  onClick={props.tree ? handleClickButtonTree : handleClickButtonGraph}
+                >
+                  {data?.option || name}
                 </button>
-              )
-            );
-          })
-        }
+              );
+            })}
+        </div>
       </div>
-    </div>
+    )
   );
 }
 
