@@ -2,8 +2,8 @@ const Tree = require('./Tree');
 const processFile = require('../csv');
 
 class DecisionTree {
-  async ingest(csvData) {
-    const { leafKey, nodeKeys, rows } = await processFile(csvData);
+  async ingest(csvData, parseOpts) {
+    const { leafKey, nodeKeys, rows } = await processFile(csvData, parseOpts);
     this._leafKey = leafKey;
     this._nodeKeys = nodeKeys;
     this._rows = rows;
@@ -11,20 +11,38 @@ class DecisionTree {
     this.buildTreeRecursively();
   }
 
-  buildTreeRecursively() {
-    this.root = new Tree({
+  static formatNodeData(column, option = null) {
+    return {
       data: {
-        column: this._nodeKeys[0],
-        option: null,
-        name: this._nodeKeys[0],
+        column,
+        option,
+        name: `${column}__${option}`,
       },
-    });
+    };
+  }
+
+  buildTreeRecursively() {
+    this.root = new Tree(DecisionTree.formatNodeData(this._nodeKeys[0]));
 
     const recurse = (node, rows, colName) => {
       const colIdx = this._nodeKeys.indexOf(colName);
       const nextColName = this._nodeKeys[colIdx + 1];
 
-      const groupOptions = this.getGroupOptions(colName, rows);
+      const groupOptions = DecisionTree.getGroupOptions(colName, rows);
+
+      // if we don't have any choice, simply go to the next column
+      if (groupOptions.length === 1) {
+        if (nextColName) {
+          return recurse(node, rows, nextColName);
+        }
+
+        // if no next column append the leaf nodes as the final choices
+        node.append(
+          ...rows.map((row) => DecisionTree.formatNodeData(this._leafKey, row[this._leafKey])),
+        );
+
+        return;
+      }
 
       node.append(...groupOptions);
       node.children.forEach((childNode) => {
@@ -33,20 +51,9 @@ class DecisionTree {
 
         if (nextColName) {
           recurse(childNode, nextRows, nextColName);
+        } else {
+          console.log('An unaccounted for situation occurred! Things may or may not have broken');
         }
-
-        // console.log(
-        //   JSON.stringify(
-        //     {
-        //       colName,
-        //       nextColName,
-        //       optionName,
-        //       nextRows,
-        //     },
-        //     null,
-        //     2,
-        //   ),
-        // );
       });
     };
 
@@ -54,9 +61,9 @@ class DecisionTree {
   }
 
   // get unique options across the provided rows for the given group name
-  getGroupOptions(group, rows) {
+  static getGroupOptions(group, rows) {
     const options = Object.keys(
-      (rows || this._rows).reduce((acc, row) => {
+      rows.reduce((acc, row) => {
         const newAcc = { ...acc };
         const rowOptions = Array.isArray(row[group]) ? row[group] : [row[group]];
 
@@ -68,9 +75,7 @@ class DecisionTree {
       }, {}),
     );
 
-    return options.map((option) => ({
-      data: { column: group, option, name: `${group}__${option}` },
-    }));
+    return options.map((option) => DecisionTree.formatNodeData(group, option));
   }
 }
 
