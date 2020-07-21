@@ -7,8 +7,8 @@ const tree = createTreeRecursively(6);
 loadSampleDecisionTree().then((dtree) => {
   console.log(dtree);
   dataStructures.push({
-    tree: dtree.root,
-    name: 'DTree',
+    tree: dtree,
+    name: 'CSV Tree',
   });
 });
 

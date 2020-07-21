@@ -3,7 +3,6 @@ import faker from 'faker';
 import Tree from './datastructures/Tree';
 import Graph from './datastructures/Graph';
 import SimpleContent from '../components/SimpleContent';
-import DecisionTree from './datastructures/DecisionTree';
 
 const nums = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth'];
 const getSomeNums = () => nums.slice(0, Math.floor(Math.random() * (nums.length - 2)) + 2);
@@ -70,8 +69,7 @@ directedGraph.linkNodes(nodes[8], nodes[7]);
 const FILE = `/data/deployment-options.csv`;
 
 export const loadSampleDecisionTree = async () => {
-  const dtree = new DecisionTree();
-  await dtree.ingest(FILE, { download: true });
+  const dtree = await Tree.fromCSV(FILE, { download: true });
 
   return dtree;
 };
