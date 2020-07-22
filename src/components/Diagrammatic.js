@@ -38,6 +38,8 @@ function Diagrammatic(props) {
                 name,
                 data,
                 key: id,
+                isGraph: !!props.graph,
+                isTree: !props.graph,
                 handleClick: props.graph ? setGraphNodeById : setTreeNodeByChildIdx,
               };
 
