@@ -69,7 +69,11 @@ directedGraph.linkNodes(nodes[8], nodes[7]);
 const FILE = `/data/deployment-options.csv`;
 
 export const loadSampleDecisionTree = async () => {
-  const dtree = await Tree.fromCSV(FILE, { download: true });
+  const dtree = await Tree.fromCSV(FILE, {
+    parseOpts: { download: true },
+    Content: SimpleContent,
+    reverseSort: true,
+  });
 
   return dtree;
 };
